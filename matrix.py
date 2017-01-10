@@ -21,12 +21,18 @@ class matrix:
 	version = "0.1"
 	
 	## -- SETUP AND INFORMATION FUNCTIONS --
-	def __init__(self, nRows = 1, nColumns = 1, input = None):
-		self.nRows = nRows
-		self.nColumns = nColumns
+	def __init__(self, input = None, nRows = 1, nColumns = 1):
 		self.contents = [[None for i in range(nColumns)] for n in range(nRows)]
 		if input != None:
-			self.populate(input)
+			if isMatrix(input):
+				self.nRows = len(input)
+				self.nColumns = len(input[0])
+				self.populate(input)
+			else:
+				raise Exception("Input is not matrix.")
+		else:
+			self.nRows = nRows
+			self.nColumns = nColumns
 	def __str__(self):
 		out = "~ "
 		for row in self.contents:
@@ -105,8 +111,8 @@ class matrix:
 			# cofactor expansion on first column:
 			det = 0
 			for row in range(self.nRows):
-				det += (-1)**(row + 1 + 1) * self.minor(row, 0).determinant()			## does not return 0 on dummy matrix
-			return row
+				det += self.minor(row, 0).determinant() * (-1)**(row + 1 + 1)			## does not return 0 on dummy matrix
+			return det
 		else:
 			pass
 			
@@ -157,4 +163,4 @@ if __name__ == "__main__":
 	a = matrix(3, 3)
 	a.populate([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 	print(a)
-	a.ninor(0, 0)
+	a.minor(0, 0)
