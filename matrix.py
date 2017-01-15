@@ -1,13 +1,7 @@
 ## TODO:
 ## - Revise matrix coordinate system so that they begin at 1, not 0
-## - Figure out determinant algorithm for >2x2 matrices DONE
 ## - Figure out how to do Gauss-Jordan Elimination
-## - Replace xDim and yDim with column and row DONE
-## - Finish minor creation algorithm
-## - Implement cofactor expansion algorithm
 ## - Use algorithm to find rows and columns with most zeroes for cofactor expansion
-## - Figure out how to implement check_if_matrix()
-## - Modify populate() to accomodate for matrices with a length of 1 in one or both dimensions
 
 def isMatrix(inp):				# checks if a list is a matrix
 	nColumns = len(inp[0])
@@ -46,9 +40,20 @@ class matrix:
 					out += "\"" + str(element) + "\" "
 			out += "]\n  "
 		return out
-	def access(self, row, column):			# Access a matrix value
+	def access(self, row = None, col = None):			# Access a matrix value.	
+		"""To access an entire row or column, use keywords `row` or `col`."""
 		try:
-			return self.contents[row][column]
+			if row != None and col != None:
+				return self.contents[row][col]
+			elif row != None and col == None:	# Access row
+				return self.contents[row]
+			elif col != None and row == None:	# Access column
+				out = []
+				for viewedRow in self.contents:
+					out.append(viewedRow[col])
+				return out
+			else:
+				return self.contents[0][0]
 		except IndexError:
 			print("Out of bounds.")
 	def assign(self, row, column, value):	# Assign or change a value
@@ -107,14 +112,12 @@ class matrix:
 		elif len(self.contents) == 2:
 			return self.access(0, 0) * self.access(1, 1) - self.access(1, 0) * self.access(0, 1)
 		# recursive case
-		elif len(self.contents) > 2:
+		else:
 			# cofactor expansion on first column:
 			det = 0
 			for row in range(self.nRows):
-				det += self.minor(row, 0).determinant() * (-1)**(row + 1 + 1)			## does not return 0 on dummy matrix
+				det += self.minor(row, 0).determinant() * (-1)**(row + 1 + 1)
 			return det
-		else:
-			pass
 			
 	## -- <UNTESTED> --
 	# matrix multiplication?
