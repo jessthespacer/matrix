@@ -90,16 +90,10 @@ class matrix:
 	def minor(self, deletedRow, deletedColumn):
 		if self.nRows == 1 and self.nColumns == 1:
 			return self.contents
-		minor = matrix(self.nRows - 1, self.nColumns - 1)
-		i = 0
-		for sourceRow in range(self.nRows):
-			if sourceRow != deletedRow:
-				j = 0
-				for sourceColumn in range(self.nColumns):
-					if sourceColumn != deletedColumn:
-						minor.assign(i, j, self.access(sourceRow, sourceColumn))
-						j += 1
-				i += 1
+		minor = self.contents[:]
+		del minor[deletedRow]
+		for row in minor:
+			del row[deletedColumn]
 		return minor
 	def determinant(self):
 		# Check if square matrix
@@ -163,7 +157,6 @@ class matrix:
 				
 ## -- TEST CODE --
 if __name__ == "__main__":
-	a = matrix(3, 3)
-	a.populate([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+	a = matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
 	print(a)
-	a.minor(0, 0)
+	print(a.minor(0, 0))
